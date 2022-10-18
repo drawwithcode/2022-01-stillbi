@@ -1,63 +1,64 @@
-//I set my variables, it is a global variable because I put it before my function sections
-let color1 = 0;
-let color2 = 0;
-let color3 = 0;
-let color4 = 0;
-let color5 = 0;
+//DEFINE THE ARRAY OF COLORS
+const colorList = ["#13E23A", "#F70825", "#F9F9F9"];
+//define the variables
+var iterator = 0;
+let myImage;
+let myImage2;
+let mySong;
 
+//I create the function preload before the function setup to set the assets
+//and set where to find my song and images
+function preload() {
+  myImage = loadImage("./assets/salvini.jpeg");
+  myImage2 = loadImage("./assets/salvinicerchio.png");
+  soundFormats("mp3", "ogg");
+  mySong = loadSound("./assets/FREESTYLE.mp3");
+}
+
+//I create my canva who occupies the whole screen
 function setup() {
-  // I create a canvas and define its size, this will be the size of the artwork
-  createCanvas(800, 800);
-  // I tell to my variables that they have to choose a randomic colour between 255 colours (0 isblack, 255 is white)
-  color1 = random(255);
-  color2 = random(255);
-  color3 = random(255);
-  color4 = random(255);
-  color5 = random(255);
+  createCanvas(windowWidth, windowHeight);
 }
 
+//in the function draw I make things appear in my canva
+//I set the background and I fill it with the photo of salvini and a black and white filter
 function draw() {
-  // I give a colour stroke to my primitives
-  stroke("black");
-  // On the background I draw 4 big squares and I decide that they have to follow the fill color 5's rule (decide a randomic colour)
-  fill(color5);
-  rect(0, 0, 400, 400); //set position and dimentions of the squares
-  rect(400, 0, 400, 400);
-  rect(0, 400, 400, 400);
-  rect(400, 400, 400, 400);
+  background(myImage);
+  myImage.filter("gray", 5);
 
-  // set fill color with the variable
-  fill(color1);
-  // draw a square using the proportion of the canvas
-  rect(width / 4, height / 4, 200, 200);
+  //this is a cicle: draw squares on background with random colors taken from my array colorList
+  for (let x = 0; x < windowWidth; x += 20) {
+    for (let y = 0; y < windowHeight; y += 50) {
+      let colorHex = random(colorList);
+      fill(color(colorHex));
 
-  //repeat for each square
-  fill(color2);
-  rect((2 * width) / 4, height / 4, 200, 200);
-  fill(color3);
-  rect(width / 4, (2 * height) / 4, 200, 200);
-  fill(color4);
-  rect((2 * width) / 4, (2 * height) / 4, 200, 200);
-
-  //add text --> size 32, I define x, y, width and height and colour
-  textSize(32);
-  text("Joseph Albers: Interactions of Colors", 10, 30);
-  fill(250);
-
-  //then i defined the framecounter which permits to change the colour
-  if (frameCount % 80 == 0) {
-    //velocity of the framecounter
-    color1 = color(random(255), random(255), random(255));
-    color2 = color(random(255), random(255), random(255));
-    color3 = color(random(255), random(255), random(255));
-    color4 = color(random(255), random(255), random(255));
-    color5 = color(random(255), random(255), random(255));
+      rect(x, y, 10, 10);
+    }
   }
-  //add text --> size 32, I define x, y, width and height and colour
+  // perlin noise applied to my salvini picture both on x and y
+  iterator++;
+  let x = iterator;
+  let y = (noise(iterator / 60) * width) / 2;
+  image(myImage2, x, y, 200, 200);
+
+  //I write my text
+  let s = "CHIUDERE I PORTI! RUSPE RUSPE RUSPE! AH NO??";
+  fill("white");
   textSize(32);
-  text("Joseph Albers: Interactions of Colors", 10, 30);
-  fill(250);
+  textAlign(CENTER);
+  text(s, 10, 10, windowWidth, windowHeight); // Text wraps within text box
 }
 
-//Joseph Albers: interaction of colours
-//BIANCA ORIANI
+//function which allows to play music when my mouse is clicked on the right part
+//when you click on the left part it stops
+function mousePressed() {
+  if (mouseButton == LEFT) {
+    if (mySong.isPlaying() == false) {
+      mySong.play();
+    }
+  } else if (mouseButton == RIGHT) {
+    if (mySong.isPlaying() == true) {
+      mySong.stop();
+    }
+  }
+}
